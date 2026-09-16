@@ -5,6 +5,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import ru.unet_app.model.PredictedClasses
 import ru.unet_app.model.TransparencyState
 import ru.unet_app.unet.models.classes.Axon
@@ -14,6 +16,7 @@ import ru.unet_app.unet.models.classes.MitochondriaBoundaries
 import ru.unet_app.unet.models.classes.PSD
 import ru.unet_app.unet.models.classes.Vesicles
 
+@RunWith(RobolectricTestRunner::class)
 class LabeledDataTest {
 
     private fun createLabels(height: Int, width: Int) = listOf(
@@ -73,7 +76,7 @@ class LabeledDataTest {
             MitochondriaBoundaries(Array(100) { FloatArray(100) })
         )
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows(IllegalArgumentException::class.java) {
             LabeledData(
                 mitochondria = labels[0] as Mitochondria,
                 PSD = labels[1] as PSD,
@@ -85,6 +88,7 @@ class LabeledDataTest {
         }
         assertEquals("All labels must have the same height and width.", exception.message)
     }
+
 
     @Test
     fun testUnitedMask() {

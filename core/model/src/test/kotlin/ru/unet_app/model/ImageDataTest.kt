@@ -1,6 +1,7 @@
 package ru.unet_app.model
 
 import android.graphics.Bitmap
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -9,7 +10,7 @@ class ImageDataTest {
 
     @Test
     fun testCreation() {
-        val bitmap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888)
+        val bitmap: Bitmap = mockk()
         val tile = Tile(bitmap, 0, 0, 256, 256)
         val tiles = listOf(tile)
 
@@ -27,7 +28,7 @@ class ImageDataTest {
 
     @Test
     fun testMultipleTiles() {
-        val bitmap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888)
+        val bitmap: Bitmap = mockk()
         val tiles = List(4) { i ->
             Tile(bitmap, i * 256, 0, (i + 1) * 256, 256)
         }

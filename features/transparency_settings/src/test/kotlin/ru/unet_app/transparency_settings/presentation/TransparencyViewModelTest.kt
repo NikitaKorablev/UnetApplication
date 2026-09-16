@@ -4,15 +4,19 @@ import android.graphics.Bitmap
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.ViewModel
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.GraphicsMode
 import ru.unet_app.datastore.domain.repository.ImageRepository
 import ru.unet_app.model.InferenceMetadata
 import ru.unet_app.model.PredictedClasses
@@ -21,6 +25,8 @@ import ru.unet_app.transparency_settings.domain.repository.TransparencyImageProc
 import java.io.File
 import java.util.ArrayList
 
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class TransparencyViewModelTest {
 
     @get:Rule
@@ -34,13 +40,17 @@ class TransparencyViewModelTest {
     private val classMasks = PredictedClasses.entries.associateWith { testBitmap }.toMutableMap()
     private val resultPath = "/test/path"
 
+    @org.junit.Before
+    fun setup() {
+        every { imageRepository.loadMetadata(any()) } returns InferenceMetadata(100, 100, 100L, 200L)
+        every { imageProcessor.unitedMask(any(), any()) } returns testBitmap
+    }
+
     @Test
-    fun testSetupDataWithBitmapArray() = runBlockingTest {
+    fun testSetupDataWithBitmapArray() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply {
             repeat(6) { add(testBitmap) }
         }
-
-        coEvery { imageRepository.loadMetadata(File(resultPath)) } returns InferenceMetadata(100, 100, 100L, 200L)
 
         viewModel.setupData(null, bitmapArray, resultPath)
 
@@ -52,12 +62,12 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testSetupDataWithBitmapPaths() = runBlockingTest {
+    fun testSetupDataWithBitmapPaths() = runTest {
         val paths = ArrayList<String>().apply {
             repeat(6) { add("/test/path/image_$it.png") }
         }
 
-        coEvery { imageRepository.loadMetadata(File(resultPath)) } returns null
+        every { imageRepository.loadMetadata(any()) } returns null
 
         // This will fail because files don't exist - testing the require
         try {
@@ -69,7 +79,7 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testUpdateTransparencyMitochondria() = runBlockingTest {
+    fun testUpdateTransparencyMitochondria() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         viewModel.setupData(null, bitmapArray, resultPath)
 
@@ -81,7 +91,7 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testUpdateTransparencyPSD() = runBlockingTest {
+    fun testUpdateTransparencyPSD() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         viewModel.setupData(null, bitmapArray, resultPath)
 
@@ -93,7 +103,7 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testUpdateTransparencyAllClasses() = runBlockingTest {
+    fun testUpdateTransparencyAllClasses() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         viewModel.setupData(null, bitmapArray, resultPath)
 
@@ -114,7 +124,7 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testGetPreviewImageCallsProcessor() = runBlockingTest {
+    fun testGetPreviewImageCallsProcessor() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         val expectedPreview = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         coEvery { imageProcessor.unitedMask(any(), any()) } returns expectedPreview
@@ -123,11 +133,11 @@ class TransparencyViewModelTest {
         val preview = viewModel.getPreviewImage()
 
         assertEquals(expectedPreview, preview)
-        verify { imageProcessor.unitedMask(capture(), capture()) }
+        verify { imageProcessor.unitedMask(any(), any()) }
     }
 
     @Test
-    fun testSavePreviewImage() = runBlockingTest {
+    fun testSavePreviewImage() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         val previewBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         coEvery { imageProcessor.unitedMask(any(), any()) } returns previewBitmap
@@ -141,7 +151,7 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testSavePreviewImageFailure() = runBlockingTest {
+    fun testSavePreviewImageFailure() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         val previewBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         coEvery { imageProcessor.unitedMask(any(), any()) } returns previewBitmap
@@ -154,12 +164,13 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testGenerateUniqueFileName() = runBlockingTest {
+    fun testGenerateUniqueFileName() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         viewModel.setupData(null, bitmapArray, resultPath)
 
         // Test via reflection or by checking the file name generation logic
         // Since generateUniqueFileName is private, we test savePreviewImage which uses it
+
         coEvery { imageProcessor.unitedMask(any(), any()) } returns testBitmap
         coEvery { imageRepository.saveImage(any(), any(), any()) } returns true
 
@@ -169,7 +180,7 @@ class TransparencyViewModelTest {
     }
 
     @Test
-    fun testDefaultTransparencyState() = runBlockingTest {
+    fun testDefaultTransparencyState() = runTest {
         val bitmapArray = ArrayList<Bitmap>().apply { repeat(6) { add(testBitmap) } }
         viewModel.setupData(null, bitmapArray, resultPath)
 

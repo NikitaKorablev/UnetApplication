@@ -1,12 +1,16 @@
 package ru.unet_app.unet.models.classes
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.core.graphics.createBitmap
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import ru.unet_app.model.PredictedClasses
 
+@RunWith(RobolectricTestRunner::class)
 class BaseLabelTest {
 
     private class TestLabel(label: Array<FloatArray>) : BaseLabel() {
@@ -37,7 +41,7 @@ class BaseLabelTest {
         mask.bitmap.getPixels(pixels, 0, 10, 0, 0, 10, 10)
 
         for (pixel in pixels) {
-            assertEquals(0xFFFFFFFF, pixel)
+            assertEquals(Color.WHITE, pixel)
         }
     }
 
@@ -51,7 +55,7 @@ class BaseLabelTest {
         mask.bitmap.getPixels(pixels, 0, 10, 0, 0, 10, 10)
 
         for (pixel in pixels) {
-            assertEquals(0xFF000000, pixel)
+            assertEquals(Color.BLACK, pixel)
         }
     }
 
@@ -68,9 +72,9 @@ class BaseLabelTest {
         val pixels = IntArray(2 * 2)
         mask.bitmap.getPixels(pixels, 0, 2, 0, 0, 2, 2)
 
-        assertEquals(0xFFFFFFFF, pixels[0])
-        assertEquals(0xFF000000, pixels[1])
-        assertEquals(0xFF000000, pixels[2])
-        assertEquals(0xFF000000, pixels[3])
+        assertEquals(Color.WHITE, pixels[0])
+        assertEquals(Color.BLACK, pixels[1])
+        assertEquals(Color.BLACK, pixels[2])
+        assertEquals(Color.BLACK, pixels[3])
     }
 }

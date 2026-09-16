@@ -1,7 +1,10 @@
-package ru.unet_app.inference_details.presentation.detail
+package ru.unet_app.inference_details
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
+import ru.unet_app.inference_details.presentation.detail.DetailImageItem
+
 
 class DetailImageItemTest {
 

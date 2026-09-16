@@ -37,6 +37,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -61,7 +66,10 @@ dependencies {
     testImplementation(libs.mockk.android)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.lifecycle.viewmodel.ktx)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.testcore)
+    testImplementation(libs.androidx.arch.core.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.robolectric)
-}
+}

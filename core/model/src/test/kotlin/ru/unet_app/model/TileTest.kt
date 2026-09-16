@@ -1,6 +1,7 @@
 package ru.unet_app.model
 
 import android.graphics.Bitmap
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -9,7 +10,7 @@ class TileTest {
 
     @Test
     fun testTileCreation() {
-        val bitmap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888)
+        val bitmap: Bitmap = mockk()
         val tile = Tile(
             bitmap = bitmap,
             startX = 0,
@@ -34,7 +35,7 @@ class TileTest {
 
     @Test
     fun testTileWithCustomCoordinates() {
-        val bitmap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888)
+        val bitmap: Bitmap = mockk()
         val tile = Tile(
             bitmap = bitmap,
             startX = 100,

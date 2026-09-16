@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,7 @@ class DetailAdapterTest {
 
     @Test
     fun testOnCreateViewHolder() {
-        val parent = ViewGroup(context)
+        val parent = FrameLayout(context)
         val viewHolder = adapter.onCreateViewHolder(parent, 0)
 
         assertNotNull(viewHolder)
@@ -51,7 +52,7 @@ class DetailAdapterTest {
 
     @Test
     fun testOnBindViewHolder() {
-        val parent = ViewGroup(context)
+        val parent = FrameLayout(context)
         val viewHolder = adapter.onCreateViewHolder(parent, 0)
 
         adapter.onBindViewHolder(viewHolder, 0)
@@ -62,7 +63,7 @@ class DetailAdapterTest {
 
     @Test
     fun testOnBindViewHolderMultipleItems() {
-        val parent = ViewGroup(context)
+        val parent = FrameLayout(context)
 
         for (i in 0 until items.size) {
             val viewHolder = adapter.onCreateViewHolder(parent, 0)
@@ -75,7 +76,7 @@ class DetailAdapterTest {
 
     @Test
     fun testClickListener() {
-        val parent = ViewGroup(context)
+        val parent = FrameLayout(context)
         val viewHolder = adapter.onCreateViewHolder(parent, 0)
         adapter.onBindViewHolder(viewHolder, 1)
 
@@ -84,6 +85,7 @@ class DetailAdapterTest {
         assertNotNull(clickItem)
         assertEquals(items[1], clickItem)
     }
+
 
     @Test
     fun testEmptyList() {

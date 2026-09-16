@@ -12,7 +12,8 @@ abstract class BaseLabel {
         get() = label.size
 
     val width: Int
-        get() = label[0].size
+        get() = if (label.isEmpty()) 0 else label[0].size
+
 
     fun getMask(): Tile {
         val colors = IntArray(width * height)

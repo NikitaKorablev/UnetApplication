@@ -5,4 +5,22 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.detekt)
 }
+
+subprojects {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    detekt {
+        buildUponDefaultConfig = true
+        ignoreFailures = true
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    ignoreFailures = true
+}
+
+

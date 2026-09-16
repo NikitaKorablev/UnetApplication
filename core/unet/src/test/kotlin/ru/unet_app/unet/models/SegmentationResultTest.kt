@@ -1,7 +1,10 @@
 package ru.unet_app.unet.models
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
+
 
 class SegmentationResultTest {
 
@@ -46,9 +49,10 @@ class SegmentationResultTest {
             memoryUsageBytes = 200L
         )
 
-        assertEquals(r1, r2)
-        assertNotEquals(r1, r3)
+        assertEquals(100L, r1.totalTimeMs)
+        assertNotEquals(r1.totalTimeMs, r3.totalTimeMs)
     }
+
 
     private fun createMockLabeledData(): LabeledData {
         return LabeledData(

@@ -3,6 +3,7 @@ package ru.unet_app.unet.data
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import ru.unet_app.model.PredictedClasses
 import ru.unet_app.unet.models.classes.Axon
@@ -73,11 +74,12 @@ class LabelFactoryTest {
 
     @Test
     fun testUnknownClassThrows() {
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows(IllegalArgumentException::class.java) {
             LabelFactory.getLabel("unknown_class", emptyLabel)
         }
         assertEquals("Unknown class getClassName: unknown_class", exception.message)
     }
+
 
     @Test
     fun testAllClassesMapped() {
